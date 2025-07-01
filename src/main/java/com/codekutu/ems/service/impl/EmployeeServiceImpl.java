@@ -2,6 +2,7 @@ package com.codekutu.ems.service.impl;
 
 import com.codekutu.ems.dto.EmployeeDto;
 import com.codekutu.ems.entity.Employee;
+import com.codekutu.ems.exception.ResourceNotFoundException;
 import com.codekutu.ems.mapper.EmployeeMapper;
 import com.codekutu.ems.repository.EmployeeRepository;
 import com.codekutu.ems.service.EmployeeService;
@@ -20,5 +21,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         // Saving to database;
         Employee savedEmployee =  employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeById(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee is not exist with given id : " + employeeId));
+        return EmployeeMapper.mapToEmployeeDto(employee);
     }
 }
